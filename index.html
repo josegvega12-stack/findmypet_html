@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registro FindMyPet - Prueba</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 999px;
+      background: #10b981;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .msg {
+      margin-top: 12px;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Registro FindMyPet (prueba)</h1>
+
+    <label>Nombre</label>
+    <input id="name" type="text" placeholder="Tu nombre" />
+
+    <label>Email</label>
+    <input id="email" type="email" placeholder="correo@example.com" />
+
+    <label>Contraseña</label>
+    <input id="password" type="password" placeholder="Tu contraseña" />
+
+    <button onclick="registrar()">Registrar</button>
+
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <script>
+    async function registrar() {
+      const msgEl = document.getElementById('msg');
+      msgEl.textContent = 'Enviando...';
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!name || !email || !password) {
+        msgEl.textContent = 'Por favor llena todos los campos.';
+        return;
+      }
+
+      // ⚠️ IMPORTANTE:
+      // AQUÍ VAS A PONER EL PATH EXACTO QUE SALE EN SWAGGER
+      // Ejemplos:
+      //   /api/users/register
+      //   /auth/register
+      const PATH_REGISTER = '/api/users/register';
+
+      const url = 'https://findmypet-backend.onrender.com' + PATH_REGISTER;
+
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await resp.json();
+
+        msgEl.textContent =
+          'Código: ' + resp.status + '\\nRespuesta: ' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        console.error(err);
+        msgEl.textContent = 'Error al conectar con el backend.';
+      }
+    }
+  </script>
+</body>
+</html>
